@@ -24,12 +24,21 @@ interface LSPTextEdit {
 
 export function activate(context: vscode.ExtensionContext) {
   const serverOptions: ServerOptions = {
-    run: { command: 'jbeam-lsp-server', args: ['--stdio'] },
-    debug: { command: 'jbeam-lsp-server', args: ['--stdio'] }
+    run: {
+      command: 'jbeam-lsp-server',
+      args: ['--stdio']
+    },
+    debug: {
+      command: 'jbeam-lsp-server',
+      args: ['--stdio']
+    }
   };
 
   const clientOptions: LanguageClientOptions = {
-    documentSelector: [{ scheme: 'file', language: 'jbeam' }]
+    documentSelector: [{
+      scheme: 'file',
+      language: 'jbeam'
+    }]
   };
 
   client = new LanguageClient(
@@ -41,7 +50,9 @@ export function activate(context: vscode.ExtensionContext) {
 
   client.start();
 
-  context.subscriptions.push({ dispose: () => client.stop() });
+  context.subscriptions.push({
+    dispose: () => client.stop()
+  });
 
   const formatCommand = vscode.commands.registerCommand(
     'jbeam.formatDocument',
@@ -54,11 +65,15 @@ export function activate(context: vscode.ExtensionContext) {
       if (!client) return;
 
       try {
-        const edits = await client.sendRequest<LSPTextEdit[]>(
-          'textDocument/formatting',
-          {
-            textDocument: { uri: document.uri.toString() },
-            options: { tabSize: editor.options.tabSize || 2, insertSpaces: true }
+        const edits = await client.sendRequest < LSPTextEdit[] > (
+          'textDocument/formatting', {
+            textDocument: {
+              uri: document.uri.toString()
+            },
+            options: {
+              tabSize: editor.options.tabSize || 2,
+              insertSpaces: true
+            }
           }
         );
 
@@ -85,6 +100,6 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(formatCommand);
 }
 
-export function deactivate(): Thenable<void> | undefined {
+export function deactivate(): Thenable < void > | undefined {
   return client ? client.stop() : undefined;
 }

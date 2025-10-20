@@ -12,48 +12,44 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
-    "languages": [
-      {
-        "id": "jbeam",
-        "aliases": [
-          "JBeam"
-        ],
-        "extensions": [
-          ".jbeam"
-        ],
-        "configuration": "./language-configuration.json"
-      }
-    ]
+    "languages": [{
+      "id": "jbeam",
+      "aliases": [
+        "JBeam"
+      ],
+      "extensions": [
+        ".jbeam"
+      ],
+      "configuration": "./language-configuration.json"
+    }]
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1"
   },
   "devDependencies": {
     "@types/node": "^24.8.1",
     "@types/vscode": "^1.95.0",
     "typescript": "^5.6.3",
-    "vscode-languageclient": "^9.0.1"
+    "js-beautify": "^1.15.4"
   },
   "scripts": {
-    "compile": "tsc -p ."
+    "compile": "tsc -p .",
+    "format": "js-beautify -r '**/*.ts' 'package.json'"
   },
   "contributes": {
-    "commands": [
-      {
-        "command": "jbeam.formatDocument",
+    "commands": [{
+      "command": "jbeam.formatDocument",
       "title": "Format JBeam Document"
-      }
-    ],
-    "keybindings": [
-    {
+    }],
+    "keybindings": [{
       "command": "jbeam.formatDocument",
       "key": "ctrl+alt+f",
       "when": "editorLangId == jbeam"
-    }
-    ],
-    "languages": [
-      {
-        "id": "jbeam",
-        "aliases": ["JBeam", "jbeam"],
-        "extensions": [".jbeam"]
-      }
-    ]
+    }],
+    "languages": [{
+      "id": "jbeam",
+      "aliases": ["JBeam", "jbeam"],
+      "extensions": [".jbeam"]
+    }]
   }
 }
