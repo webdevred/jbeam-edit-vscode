@@ -63,7 +63,7 @@
     "js-beautify": "^1.15.4"
   },
   "scripts": {
-    "compile": "tsc -p .",
+    "build": "tsc -p .",
     "format": "js-beautify -r '**/*.ts' 'package.json'"
   }
 }
