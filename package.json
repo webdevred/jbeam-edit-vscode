@@ -8,19 +8,49 @@
     "vscode": "^1.95.0"
   },
   "activationEvents": [
-    "onLanguage:jbeam"
+    "onLanguage:jbeam",
+    "onLanguage:jbfl"
   ],
   "main": "./dist/extension.js",
+  "categories": [
+    "Programming Languages"
+  ],
   "contributes": {
+    "commands": [{
+      "command": "jbeam.formatDocument",
+      "title": "Format JBeam Document"
+    }],
+    "keybindings": [{
+      "command": "jbeam.formatDocument",
+      "key": "ctrl+alt+f",
+      "when": "editorLangId == jbeam"
+    }],
     "languages": [{
-      "id": "jbeam",
-      "aliases": [
-        "JBeam"
-      ],
-      "extensions": [
-        ".jbeam"
-      ],
-      "configuration": "./language-configuration.json"
+        "id": "jbeam",
+        "aliases": [
+          "JBeam",
+          "jbeam"
+        ],
+        "extensions": [
+          ".jbeam"
+        ]
+      },
+      {
+        "id": "jbfl",
+        "aliases": [
+          "JBFL",
+          "jbfl"
+        ],
+        "extensions": [
+          ".jbfl"
+        ],
+        "configuration": "./src/language-jbfl-config.json"
+      }
+    ],
+    "grammars": [{
+      "language": "jbfl",
+      "scopeName": "source.jbfl",
+      "path": "./src/jbfl.tmLanguage.json"
     }]
   },
   "dependencies": {
@@ -35,21 +65,5 @@
   "scripts": {
     "compile": "tsc -p .",
     "format": "js-beautify -r '**/*.ts' 'package.json'"
-  },
-  "contributes": {
-    "commands": [{
-      "command": "jbeam.formatDocument",
-      "title": "Format JBeam Document"
-    }],
-    "keybindings": [{
-      "command": "jbeam.formatDocument",
-      "key": "ctrl+alt+f",
-      "when": "editorLangId == jbeam"
-    }],
-    "languages": [{
-      "id": "jbeam",
-      "aliases": ["JBeam", "jbeam"],
-      "extensions": [".jbeam"]
-    }]
   }
 }

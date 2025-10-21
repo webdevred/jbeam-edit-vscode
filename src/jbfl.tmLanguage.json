@@ -1,0 +1,54 @@
+{
+  "scopeName": "source.jbfl",
+  "patterns": [
+    {
+      "name": "keyword.control.jbfl",
+      "match": "\\b([A-Za-z0-9_]+)\\s*:"
+    },
+    {
+      "name": "string.quoted.other.jbfl",
+      "match": ":\\s*([^;]+);"
+    },
+    {
+      "name": "constant.numeric.jbfl",
+      "match": "\\b[0-9]+\\b"
+    },
+    {
+      "name": "constant.language.boolean.jbfl",
+      "match": "\\b(true|false)\\b"
+    },
+    {
+      "name": "entity.name.function.jbfl",
+      "match": "(\\.[a-zA-Z0-9*]+)+"
+    },
+    {
+      "name": "punctuation.bracket.jbfl",
+      "match": "[{}]"
+    },
+    {
+      "name": "punctuation.terminator.jbfl",
+      "match": ";"
+    },
+    {
+      "include": "#comments"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.jbfl",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.block.jbfl",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    }
+  },
+  "fileTypes": ["jbfl"],
+  "name": "JBFL",
+  "uuid": "d41d8cd9-8f00-3204-a980-001bfb0a0000"
+}
