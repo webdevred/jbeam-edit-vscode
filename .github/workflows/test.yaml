@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - run: npm install
+      - run: npm clean-install
       - name: Check formatting with js-beautify
         run: |
           npm run format
