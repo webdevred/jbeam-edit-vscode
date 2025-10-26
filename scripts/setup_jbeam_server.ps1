@@ -9,7 +9,8 @@ $zipPath = Join-Path $installDir "jbeam-edit-v0.0.4-experimental.zip"
 Expand-Archive -Path $zipPath -DestinationPath $installDir -Force
 $setupExe = Join-Path $installDir "jbeam-edit-setup.exe"
 
-Start-Process -FilePath $setupExe -ArgumentList "/S" -Wait
+Start-Process -FilePath $setupExe -ArgumentList "/S" -NoNewWindow
+Start-Sleep -Seconds 60
 
 Start-Process -FilePath "jbeam-lsp-server" -NoNewWindow
 
