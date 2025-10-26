@@ -1,17 +1,37 @@
 $ErrorActionPreference = "Stop"
 
+Write-Host "Creating temporary installation directory..."
 $installDir = "C:\jbeam-lsp-server"
-New-Item -ItemType Directory -Force -Path $installDir
+New-Item -ItemType Directory -Force -Path $installDir | Out-Null
 
-gh release download v0.0.4 --repo webdevred/jbeam_edit --pattern "jbeam-edit-v0.0.4-experimental.zip" --dir $installDir
+Write-Host "Downloading JBeam Edit release archive..."
+Invoke-WebRequest `
+    -Uri "https://github.com/webdevred/jbeam_edit/releases/download/0.0.4/jbeam-edit-v0.0.4-experimental.zip" `
+    -OutFile "$installDir\jbeam-edit.zip"
 
-$zipPath = Join-Path $installDir "jbeam-edit-v0.0.4-experimental.zip"
-Expand-Archive -Path $zipPath -DestinationPath $installDir -Force
+Write-Host "Extracting archive..."
+Expand-Archive "$installDir\jbeam-edit.zip" -DestinationPath $installDir -Force
+
 $setupExe = Join-Path $installDir "jbeam-edit-setup.exe"
+if (!(Test-Path $setupExe)) {
+    Write-Host "ERROR: Setup executable not found. Extraction may have failed."
+    exit 1
+}
 
-Start-Process -FilePath $setupExe -ArgumentList "/S" -NoNewWindow
-Start-Sleep -Seconds 60
+Write-Host "Running silent installer..."
+Start-Process `
+    -FilePath $setupExe `
+    -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" `
+    -Wait
 
-Start-Process -FilePath "jbeam-lsp-server" -NoNewWindow
+Write-Host "Checking PATH for jbeam-lsp-server..."
+$serverCmd = Get-Command "jbeam-lsp-server" -ErrorAction SilentlyContinue
+if (!$serverCmd) {
+    Write-Host "ERROR: jbeam-lsp-server not found on PATH after installation."
+    exit 1
+}
 
-Write-Host "jbeam-lsp-server installerad och startad via PATH"
+Write-Host "Starting jbeam-lsp-server..."
+Start-Process -FilePath "jbeam-lsp-server" -ArgumentList "--stdio" -NoNewWindow
+
+Write-Host "Install complete."
