@@ -10,7 +10,7 @@ gh release download v0.0.4 --repo webdevred/jbeam_edit --pattern "jbeam-edit-v0.
 Write-Host "Extracting archive..."
 Expand-Archive "$installDir\jbeam-edit-v0.0.4-experimental.zip" -DestinationPath $zipDir -Force
 
-$setupExe = Join-Path $installDir "jbeam-edit-setup.exe"
+$setupExe = Join-Path $zipDir "jbeam-edit-setup.exe"
 if (!(Test-Path $setupExe)) {
     Write-Host "ERROR: Setup executable not found. Extraction may have failed."
     exit 1
