@@ -22,4 +22,4 @@ if (!(Test-Path $serverExe)) {
     exit 1
 }
 
-& $serverExe --stdio
+& $serverExe
