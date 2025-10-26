@@ -21,5 +21,3 @@ if (!(Test-Path $serverExe)) {
     Write-Host "ERROR: jbeam-lsp-server.exe not found."
     exit 1
 }
-
-& $serverExe
