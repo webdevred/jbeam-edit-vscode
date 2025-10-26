@@ -15,7 +15,8 @@ jobs:
         run: |
           npm run format
           git diff --exit-code
-      - run: Setup jbeam language server
+      - name: Setup jbeam language server
+        run: |
           mkdir C:\jbeam-lsp-server
           cd C:\jbeam-lsp-server
           gh release download 0.0.4 --repo webdevred/jbeam_edit --pattern "setup.exe"
