@@ -21,4 +21,4 @@ jobs:
           git diff --exit-code
       - run: npm run build
       - name: Run integration tests
-        run: npx mocha -r ts-node/register tests/integration/**/*.ts --timeout 60000
+        run: npm run test:integration
