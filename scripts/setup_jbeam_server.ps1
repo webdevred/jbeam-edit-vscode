@@ -5,9 +5,7 @@ $installDir = "C:\jbeam-lsp-server"
 New-Item -ItemType Directory -Force -Path $installDir | Out-Null
 
 Write-Host "Downloading JBeam Edit release archive..."
-Invoke-WebRequest `
-    -Uri "https://github.com/webdevred/jbeam_edit/releases/download/0.0.4/jbeam-edit-v0.0.4-experimental.zip" `
-    -OutFile "$installDir\jbeam-edit.zip"
+gh release download v0.0.4 --repo webdevred/jbeam_edit --pattern "jbeam-edit-v0.0.4-experimental.zip" --dir $installDir
 
 Write-Host "Extracting archive..."
 Expand-Archive "$installDir\jbeam-edit.zip" -DestinationPath $installDir -Force
