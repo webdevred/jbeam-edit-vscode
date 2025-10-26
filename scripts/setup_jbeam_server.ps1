@@ -8,7 +8,7 @@ Write-Host "Downloading JBeam Edit release archive..."
 gh release download v0.0.4 --repo webdevred/jbeam_edit --pattern "jbeam-edit-v0.0.4-experimental.zip" --dir $zipDir
 
 Write-Host "Extracting archive..."
-Expand-Archive "$installDir\jbeam-edit-v0.0.4-experimental.zip" -DestinationPath $zipDir -Force
+Expand-Archive "$zipDirDir\jbeam-edit-v0.0.4-experimental.zip" -DestinationPath $zipDir -Force
 
 $setupExe = Join-Path $zipDir "jbeam-edit-setup.exe"
 if (!(Test-Path $setupExe)) {
