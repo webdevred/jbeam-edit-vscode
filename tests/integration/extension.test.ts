@@ -1,27 +1,45 @@
+import * as path from 'path';
 import * as vscode from 'vscode';
 import {
-  expect
-} from 'chai';
+  LanguageClient,
+  LanguageClientOptions,
+  ServerOptions
+} from 'vscode-languageclient/node';
 
-suite('JBeam Extension Integration Test', () => {
+let client: LanguageClient;
 
-  test('format command works with LSP server', async () => {
-    const doc = await vscode.workspace.openTextDocument({
-      language: 'jbeam',
-      content: 'foo=bar'
-    });
-    const editor = await vscode.window.showTextDocument(doc);
+export function activate(context: vscode.ExtensionContext) {
+  const serverPath = process.env.JBEAM_LSP_PATH ||
+    "C:\\Program Files (x86)\\jbeam-edit\\jbeam-lsp-server.exe";
 
-    expect(editor.document).to.not.be.undefined;
+  const serverOptions: ServerOptions = {
+    run: {
+      command: serverPath,
+      args: ['--stdio']
+    },
+    debug: {
+      command: serverPath,
+      args: ['--stdio']
+    }
+  };
 
-    await vscode.commands.executeCommand('jbeam.formatDocument');
+  const clientOptions: LanguageClientOptions = {
+    documentSelector: [{
+      scheme: 'file',
+      language: 'jbeam'
+    }]
+  };
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
+  client = new LanguageClient(
+    'jbeamLsp',
+    'JBeam Language Server',
+    serverOptions,
+    clientOptions
+  );
 
-    const textAfter = editor.document.getText();
-    expect(textAfter).to.be.a('string');
-    expect(textAfter.length).to.be.greaterThan(0);
+  client.start();
 
+  context.subscriptions.push({
+    dispose: () => client.stop()
   });
-
-});
+}

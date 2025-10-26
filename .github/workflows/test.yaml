@@ -21,4 +21,6 @@ jobs:
           git diff --exit-code
       - run: npm run build
       - name: Run integration tests
+        env:
+          JBEAM_LSP_PATH: "C:\\Program Files (x86)\\jbeam-edit\\jbeam-lsp-server.exe"
         run: npm run test:integration

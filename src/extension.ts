@@ -23,14 +23,16 @@ interface LSPTextEdit {
 }
 
 export function activate(context: vscode.ExtensionContext) {
+  const serverPath = process.env.JBEAM_LSP_PATH || 'jbeam-lsp-server';
+
   const serverOptions: ServerOptions = {
     run: {
-      command: 'jbeam-lsp-server',
-      args: ['--stdio']
+      command: serverPath,
+      args: []
     },
     debug: {
-      command: 'jbeam-lsp-server',
-      args: ['--stdio']
+      command: serverPath,
+      args: []
     }
   };
 
@@ -54,48 +56,42 @@ export function activate(context: vscode.ExtensionContext) {
     dispose: () => client.stop()
   });
 
-  const formatCommand = vscode.commands.registerCommand(
-    'jbeam.formatDocument',
-    async () => {
-      const editor = vscode.window.activeTextEditor;
-      if (!editor) return;
+  const formatCommand = vscode.commands.registerCommand('jbeam.formatDocument', async () => {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) return;
 
-      const document = editor.document;
+    const document = editor.document;
+    if (!client) return;
 
-      if (!client) return;
-
-      try {
-        const edits = await client.sendRequest < LSPTextEdit[] > (
-          'textDocument/formatting', {
-            textDocument: {
-              uri: document.uri.toString()
-            },
-            options: {
-              tabSize: editor.options.tabSize || 2,
-              insertSpaces: true
-            }
-          }
-        );
-
-        if (edits && edits.length > 0) {
-          const workspaceEdit = new vscode.WorkspaceEdit();
-          for (const edit of edits) {
-            workspaceEdit.replace(
-              document.uri,
-              new vscode.Range(
-                new vscode.Position(edit.range.start.line, edit.range.start.character),
-                new vscode.Position(edit.range.end.line, edit.range.end.character)
-              ),
-              edit.newText
-            );
-          }
-          await vscode.workspace.applyEdit(workspaceEdit);
+    try {
+      const edits = await client.sendRequest < LSPTextEdit[] > ('textDocument/formatting', {
+        textDocument: {
+          uri: document.uri.toString()
+        },
+        options: {
+          tabSize: editor.options.tabSize || 2,
+          insertSpaces: true
         }
-      } catch (err) {
-        vscode.window.showErrorMessage('JBeam format failed: ' + err);
+      });
+
+      if (edits && edits.length > 0) {
+        const workspaceEdit = new vscode.WorkspaceEdit();
+        for (const edit of edits) {
+          workspaceEdit.replace(
+            document.uri,
+            new vscode.Range(
+              new vscode.Position(edit.range.start.line, edit.range.start.character),
+              new vscode.Position(edit.range.end.line, edit.range.end.character)
+            ),
+            edit.newText
+          );
+        }
+        await vscode.workspace.applyEdit(workspaceEdit);
       }
+    } catch (err) {
+      vscode.window.showErrorMessage('JBeam format failed: ' + err);
     }
-  );
+  });
 
   context.subscriptions.push(formatCommand);
 }
