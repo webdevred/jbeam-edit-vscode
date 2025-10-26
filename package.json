@@ -71,6 +71,6 @@
   "scripts": {
     "build": "tsc -p .",
     "format": "js-beautify -r './**/*.ts' './package.json'",
-    "test:integration": "ts-node ./tests/runTest.ts"
+    "test:integration": "ts-node ./tests/integration/runTest.ts"
   }
 }
