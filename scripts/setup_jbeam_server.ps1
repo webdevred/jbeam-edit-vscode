@@ -8,7 +8,7 @@ Write-Host "Downloading JBeam Edit release archive..."
 gh release download v0.0.4 --repo webdevred/jbeam_edit --pattern "jbeam-edit-v0.0.4-experimental.zip" --dir $zipDir
 
 Write-Host "Extracting archive..."
-Expand-Archive "$zipDirDir\jbeam-edit-v0.0.4-experimental.zip" -DestinationPath $zipDir -Force
+Expand-Archive "$zipDir\jbeam-edit-v0.0.4-experimental.zip" -DestinationPath $zipDir -Force
 
 $setupExe = Join-Path $zipDir "jbeam-edit-setup.exe"
 if (!(Test-Path $setupExe)) {
@@ -26,14 +26,7 @@ $installDir = "C:Program Files (x86)\jbeam-edit"
 
 dir $installDir
 
-Write-Host "Checking PATH for jbeam-lsp-server..."
-$serverCmd = Get-Command $installDir -ErrorAction SilentlyContinue
-if (!$serverCmd) {
-    Write-Host "ERROR: jbeam-lsp-server not found on PATH after installation."
-    exit 1
-}
-
 Write-Host "Starting jbeam-lsp-server..."
-Start-Process -FilePath "jbeam-lsp-server" -ArgumentList "--stdio" -NoNewWindow
+Start-Process -FilePath "jbeam-lsp-server" -NoNewWindow
 
 Write-Host "Install complete."
