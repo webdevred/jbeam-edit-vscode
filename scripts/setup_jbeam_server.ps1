@@ -23,8 +23,7 @@ Start-Process `
     -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" `
     -Wait
 
-dir D:
-dir C:
+dir "C:Program Files (x86)"
 
 Write-Host "Checking PATH for jbeam-lsp-server..."
 $serverCmd = Get-Command "jbeam-lsp-server" -ErrorAction SilentlyContinue
