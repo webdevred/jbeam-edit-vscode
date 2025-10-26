@@ -19,7 +19,7 @@ if (!(Test-Path $setupExe)) {
 Write-Host "Running silent installer..."
 Start-Process `
     -FilePath $setupExe `
-    -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" `
+    -ArgumentList "/SUPPRESSMSGBOXES /NORESTART /SP-" `
     -Wait
 
 Write-Host "Checking PATH for jbeam-lsp-server..."
