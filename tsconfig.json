@@ -7,7 +7,7 @@
     "strict": true,
     "moduleResolution": "node",
     "lib": ["es2020"],
-    "types": ["node", "vscode"],
+    "types": ["node", "vscode", "mocha"],
     "skipLibCheck": true,
   },
   "include": ["src"]
