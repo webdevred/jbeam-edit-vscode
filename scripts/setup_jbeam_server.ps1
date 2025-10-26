@@ -27,6 +27,6 @@ $installDir = "C:Program Files (x86)\jbeam-edit"
 dir $installDir
 
 Write-Host "Starting jbeam-lsp-server..."
-Start-Process -FilePath "jbeam-lsp-server" -NoNewWindow
+Start-Process -FilePath "C:Program Files (x86)\jbeam-edit\jbeam-lsp-server.exe" -NoNewWindow
 
 Write-Host "Install complete."
