@@ -16,7 +16,7 @@ jobs:
           npm run format
           git diff --exit-code
       - name: Install and start jbeam-lsp-server
-        run: powershell -ExecutionPolicy Bypass -File ./scripts/setup-server.ps1
+        run: powershell -ExecutionPolicy Bypass -File ./scripts/setup_jbeam_server.ps1
       - run: npm run build
       - name: Run integration tests
         run: npx mocha -r ts-node/register tests/integration/**/*.ts --timeout 60000
