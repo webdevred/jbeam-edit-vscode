@@ -23,6 +23,8 @@ Start-Process `
     -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" `
     -Wait
 
+fsutil fsinfo drives
+
 Write-Host "Checking PATH for jbeam-lsp-server..."
 $serverCmd = Get-Command "jbeam-lsp-server" -ErrorAction SilentlyContinue
 if (!$serverCmd) {
