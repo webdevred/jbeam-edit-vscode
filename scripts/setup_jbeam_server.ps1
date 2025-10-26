@@ -2,6 +2,7 @@ $ErrorActionPreference = "Stop"
 
 Write-Host "Creating temporary installation directory..."
 $installDir = "C:\jbeam-lsp-server"
+$logFile = Join-Path $installDir "jbeam-install.log"
 New-Item -ItemType Directory -Force -Path $installDir | Out-Null
 
 Write-Host "Downloading JBeam Edit release archive..."
@@ -19,7 +20,7 @@ if (!(Test-Path $setupExe)) {
 Write-Host "Running silent installer..."
 Start-Process `
     -FilePath $setupExe `
-    -ArgumentList "/SUPPRESSMSGBOXES /NORESTART /SP-" `
+    -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- /LOG=`"$logFile`"" `
     -Wait
 
 Write-Host "Checking PATH for jbeam-lsp-server..."
