@@ -15,13 +15,8 @@ jobs:
         run: |
           npm run format
           git diff --exit-code
-      - name: Setup jbeam language server
-        run: |
-          mkdir C:\jbeam-lsp-server
-          cd C:\jbeam-lsp-server
-          gh release download 0.0.4 --repo webdevred/jbeam_edit --pattern "setup.exe"
-          ./jbeam-edit-setup.exe /S
-      - name: Start jbeam-lsp-server
-        run: Start-Process "jbeam-lsp-server"
+      - name: Install and start jbeam-lsp-server
+        run: powershell -ExecutionPolicy Bypass -File ./scripts/setup-server.ps1
       - run: npm run build
-      - run: npm run test:integration
+      - name: Run integration tests
+        run: npx mocha -r ts-node/register tests/integration/**/*.ts --timeout 60000
