@@ -1,15 +1,14 @@
 $ErrorActionPreference = "Stop"
 
 Write-Host "Creating temporary installation directory..."
-$installDir = "C:\jbeam-lsp-server"
-$logFile = Join-Path $installDir "jbeam-install.log"
-New-Item -ItemType Directory -Force -Path $installDir | Out-Null
+$zipDir = "C:\jbeam-lsp-server"
+New-Item -ItemType Directory -Force -Path $zipDir | Out-Null
 
 Write-Host "Downloading JBeam Edit release archive..."
-gh release download v0.0.4 --repo webdevred/jbeam_edit --pattern "jbeam-edit-v0.0.4-experimental.zip" --dir $installDir
+gh release download v0.0.4 --repo webdevred/jbeam_edit --pattern "jbeam-edit-v0.0.4-experimental.zip" --dir $zipDir
 
 Write-Host "Extracting archive..."
-Expand-Archive "$installDir\jbeam-edit-v0.0.4-experimental.zip" -DestinationPath $installDir -Force
+Expand-Archive "$installDir\jbeam-edit-v0.0.4-experimental.zip" -DestinationPath $zipDir -Force
 
 $setupExe = Join-Path $installDir "jbeam-edit-setup.exe"
 if (!(Test-Path $setupExe)) {
@@ -23,10 +22,12 @@ Start-Process `
     -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" `
     -Wait
 
-dir "C:Program Files (x86)"
+$installDir = "C:Program Files (x86)\jbeam-edit"
+
+dir $installDir
 
 Write-Host "Checking PATH for jbeam-lsp-server..."
-$serverCmd = Get-Command "jbeam-lsp-server" -ErrorAction SilentlyContinue
+$serverCmd = Get-Command $installDir -ErrorAction SilentlyContinue
 if (!$serverCmd) {
     Write-Host "ERROR: jbeam-lsp-server not found on PATH after installation."
     exit 1
