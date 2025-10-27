@@ -1,105 +1,128 @@
 import * as vscode from 'vscode';
 import {
-  LanguageClient,
-  LanguageClientOptions,
-  ServerOptions
+    LanguageClient,
+    LanguageClientOptions,
+    ServerOptions
 } from 'vscode-languageclient/node';
 
 let client: LanguageClient;
 
 interface LSPPosition {
-  line: number;
-  character: number;
+    line: number;
+    character: number;
 }
 
 interface LSPRange {
-  start: LSPPosition;
-  end: LSPPosition;
+    start: LSPPosition;
+    end: LSPPosition;
 }
 
 interface LSPTextEdit {
-  range: LSPRange;
-  newText: string;
+    range: LSPRange;
+    newText: string;
+}
+
+function sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 export function activate(context: vscode.ExtensionContext) {
-  const serverOptions: ServerOptions = {
-    run: {
-      command: 'jbeam-lsp-server',
-      args: ['--stdio']
-    },
-    debug: {
-      command: 'jbeam-lsp-server',
-      args: ['--stdio']
+    const serverPath = process.env.JBEAM_LSP_PATH || 'jbeam-lsp-server';
+    console.log('[jbeam] activate: serverPath =', serverPath);
+
+    const serverOptions: ServerOptions = {
+        run: { command: serverPath, args: [] },
+        debug: { command: serverPath, args: [] }
+    };
+
+    const clientOptions: LanguageClientOptions = {
+        documentSelector: [{ scheme: 'file', language: 'jbeam' }]
+    };
+
+    client = new LanguageClient('jbeamLsp', 'JBeam Language Server', serverOptions, clientOptions);
+
+    console.log('[jbeam] starting language client...');
+    try {
+        client.start();
+    } catch (err) {
+        console.error('[jbeam] client.start() threw:', err);
     }
-  };
 
-  const clientOptions: LanguageClientOptions = {
-    documentSelector: [{
-      scheme: 'file',
-      language: 'jbeam'
-    }]
-  };
+    const anyClient = client as unknown as { onReady?: () => Promise<void> };
 
-  client = new LanguageClient(
-    'jbeamLsp',
-    'JBeam Language Server',
-    serverOptions,
-    clientOptions
-  );
-
-  client.start();
-
-  context.subscriptions.push({
-    dispose: () => client.stop()
-  });
-
-  const formatCommand = vscode.commands.registerCommand(
-    'jbeam.formatDocument',
-    async () => {
-      const editor = vscode.window.activeTextEditor;
-      if (!editor) return;
-
-      const document = editor.document;
-
-      if (!client) return;
-
-      try {
-        const edits = await client.sendRequest < LSPTextEdit[] > (
-          'textDocument/formatting', {
-            textDocument: {
-              uri: document.uri.toString()
-            },
-            options: {
-              tabSize: editor.options.tabSize || 2,
-              insertSpaces: true
+    (async () => {
+        if (typeof anyClient.onReady === 'function') {
+            try {
+                console.log('[jbeam] waiting for client.onReady()...');
+                await anyClient.onReady!();
+                console.log('[jbeam] client.onReady resolved');
+            } catch (err) {
+                console.error('[jbeam] client.onReady rejected:', err);
             }
-          }
-        );
-
-        if (edits && edits.length > 0) {
-          const workspaceEdit = new vscode.WorkspaceEdit();
-          for (const edit of edits) {
-            workspaceEdit.replace(
-              document.uri,
-              new vscode.Range(
-                new vscode.Position(edit.range.start.line, edit.range.start.character),
-                new vscode.Position(edit.range.end.line, edit.range.end.character)
-              ),
-              edit.newText
-            );
-          }
-          await vscode.workspace.applyEdit(workspaceEdit);
+        } else {
+            console.log('[jbeam] client.onReady not available, waiting fallback 1500ms...');
+            await sleep(1500);
+            console.log('[jbeam] fallback wait complete');
         }
-      } catch (err) {
-        vscode.window.showErrorMessage('JBeam format failed: ' + err);
-      }
-    }
-  );
 
-  context.subscriptions.push(formatCommand);
+        const formatCommand = vscode.commands.registerCommand('jbeam.formatDocument', async () => {
+            console.log('[jbeam] command invoked: jbeam.formatDocument');
+
+            const editor = vscode.window.activeTextEditor;
+            if (!editor) {
+                console.log('[jbeam] no active editor');
+                return;
+            }
+
+            const document = editor.document;
+            if (!client) {
+                console.log('[jbeam] language client is not initialized');
+                return;
+            }
+
+            try {
+                const edits = await client.sendRequest<LSPTextEdit[]>('textDocument/formatting', {
+                    textDocument: { uri: document.uri.toString() },
+                    options: { tabSize: editor.options.tabSize || 2, insertSpaces: true }
+                });
+
+                if (edits && edits.length > 0) {
+                    console.log('[jbeam] received edits:', edits);
+                    const workspaceEdit = new vscode.WorkspaceEdit();
+                    for (const edit of edits) {
+                        workspaceEdit.replace(
+                            document.uri,
+                            new vscode.Range(
+                                new vscode.Position(edit.range.start.line, edit.range.start.character),
+                                new vscode.Position(edit.range.end.line, edit.range.end.character)
+                            ),
+                            edit.newText
+                        );
+                    }
+                    const applied = await vscode.workspace.applyEdit(workspaceEdit);
+                    console.log('[jbeam] applied edits:', applied);
+                } else {
+                    console.log('[jbeam] no edits returned from server');
+                }
+            } catch (err) {
+                console.error('[jbeam] JBeam format failed:', err);
+                vscode.window.showErrorMessage('JBeam format failed: ' + err);
+            }
+        });
+
+        context.subscriptions.push(formatCommand);
+        console.log('[jbeam] command registered');
+    })();
+
+    context.subscriptions.push({
+        dispose: () => {
+            console.log('[jbeam] disposing language client');
+            return client ? client.stop() : undefined;
+        }
+    });
 }
 
-export function deactivate(): Thenable < void > | undefined {
-  return client ? client.stop() : undefined;
+export function deactivate(): Thenable<void> | undefined {
+    console.log('[jbeam] deactivate called');
+    return client ? client.stop() : undefined;
 }
