@@ -1,6 +1,6 @@
 {
   "name": "jbeam-lsp",
-  "repository" : "https://github.com/webdevred/jbeam-edit-vscode",
+  "repository": "https://github.com/webdevred/jbeam-edit-vscode",
   "displayName": "JBeam LSP Connector",
   "description": "Minimal VS Codium extension that connects to jbeam-lsp-server for LSP features.",
   "version": "0.0.3",
@@ -17,21 +17,16 @@
     "Programming Languages"
   ],
   "contributes": {
-    "commands": [
-      {
-        "command": "jbeam.formatDocument",
-        "title": "Format JBeam Document"
-      }
-    ],
-    "keybindings": [
-      {
-        "command": "jbeam.formatDocument",
-        "key": "ctrl+alt+f",
-        "when": "editorLangId == jbeam"
-      }
-    ],
-    "languages": [
-      {
+    "commands": [{
+      "command": "jbeam.formatDocument",
+      "title": "Format JBeam Document"
+    }],
+    "keybindings": [{
+      "command": "jbeam.formatDocument",
+      "key": "ctrl+alt+f",
+      "when": "editorLangId == jbeam"
+    }],
+    "languages": [{
         "id": "jbeam",
         "aliases": [
           "JBeam",
@@ -53,13 +48,11 @@
         "configuration": "./src/language-jbfl-config.json"
       }
     ],
-    "grammars": [
-      {
-        "language": "jbfl",
-        "scopeName": "source.jbfl",
-        "path": "./src/jbfl.tmLanguage.json"
-      }
-    ]
+    "grammars": [{
+      "language": "jbfl",
+      "scopeName": "source.jbfl",
+      "path": "./src/jbfl.tmLanguage.json"
+    }]
   },
   "dependencies": {
     "vscode-languageclient": "^9.0.1"
