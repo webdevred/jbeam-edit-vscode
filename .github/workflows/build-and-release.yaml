@@ -17,6 +17,6 @@ jobs:
           git diff --exit-code
       - run: npm run build
       - name: Package extension
-        run: vsce package
+        run: npx vsce package
       - name: Publish to Visual Studio Marketplace
-        run: vsce publish -p ${{ secrets.VSCE_TOKEN }}
+        run: npx vsce publish -p ${{ secrets.VSCE_TOKEN }}
