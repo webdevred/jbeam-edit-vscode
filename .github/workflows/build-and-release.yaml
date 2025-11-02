@@ -10,10 +10,6 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v5
-      - name: Install and start jbeam-lsp-server
-        run: powershell -ExecutionPolicy Bypass -File ./scripts/setup_jbeam_server.ps1
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: npm clean-install
       - name: Check formatting with js-beautify
         run: |
