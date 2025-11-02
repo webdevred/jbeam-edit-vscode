@@ -2,17 +2,25 @@ name: Test Jbeam Edit extension
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
 
 jobs:
   integration-test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v5
-      - run: npm install
+      - name: Install and start jbeam-lsp-server
+        run: powershell -ExecutionPolicy Bypass -File ./scripts/setup_jbeam_server.ps1
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: npm clean-install
       - name: Check formatting with js-beautify
         run: |
           npm run format
           git diff --exit-code
       - run: npm run build
+      - name: Run integration tests
+        env:
+          JBEAM_LSP_PATH: "C:\\Program Files (x86)\\jbeam-edit\\jbeam-lsp-server.exe"
+        run: npm run test:integration
