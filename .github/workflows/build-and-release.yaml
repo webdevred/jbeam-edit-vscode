@@ -1,9 +1,8 @@
-name: Test Jbeam Edit extension
+name: Release Jbeam Edit extension
 
 on:
   push:
-    branches: [main]
-  pull_request:
+    tags: [v*]
 
 jobs:
   integration-test:
