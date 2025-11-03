@@ -1,8 +1,0 @@
-# Ignore everything
-**
-
-# Include specific files
-!dist/*
-!LICENSE
-!package.json
-!README.md

@@ -1,10 +1,10 @@
 {
   "name": "jbeam-lsp",
-  "repository": "https://github.com/webdevred/jbeam-edit-vscode",
   "displayName": "JBeam LSP Connector",
   "description": "Minimal VS Codium extension that connects to jbeam-lsp-server for LSP features.",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "publisher": "webdevred",
+  "repository": "https://github.com/webdevred/jbeam-edit-vscode",
   "engines": {
     "vscode": "^1.95.0"
   },
@@ -66,6 +66,16 @@
   },
   "scripts": {
     "build": "tsc -p .",
-    "format": "js-beautify -r '**/*.ts' 'package.json'"
-  }
+    "format": "js-beautify -r '**/*.ts' 'package.json'",
+    "package": "vsce package",
+    "postinstall": "npm run build"
+  },
+  "files": [
+    "dist",
+    "src",
+    "node_modules",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ]
 }
