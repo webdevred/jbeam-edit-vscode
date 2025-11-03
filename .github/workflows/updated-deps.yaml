@@ -28,6 +28,7 @@ jobs:
       - name: Install dependencies
         run: npm clean-install
       - name: Check for outdated dependencies
+        shell: bash
         run: |-
           OUTDATED=$(npm outdated || true)
           if [ -n "$OUTDATED" ]; then
