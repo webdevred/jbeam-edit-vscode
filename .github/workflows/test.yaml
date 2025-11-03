@@ -21,6 +21,7 @@ jobs:
             ${{ runner.os }}-node-
       - run: npm clean-install
       - name: Check formatting with js-beautify
+        shell: bash
         run: |
           npm run format
           git diff --exit-code

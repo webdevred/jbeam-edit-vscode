@@ -75,7 +75,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "npm run typecheck && esbuild src/extension.ts --bundle --platform=node --external:vscode --outfile=dist/extension.js",
-    "format": "js-beautify -r './**/*.ts' './package.json'",
+    "format": "js-beautify -r './**/*.ts'",
     "package": "vsce package"
   },
   "files": [
