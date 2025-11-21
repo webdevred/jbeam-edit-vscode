@@ -9,6 +9,10 @@ updates:
     commit-message:
       prefix: chore
       include: scope
+    allow:
+      - dependency-type: "all"
+    ignore:
+      - dependency-name: "@types/vscode"
     groups:
       all-dependabot-updates:
         patterns: ['*']
