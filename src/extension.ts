@@ -45,7 +45,7 @@ function isExeInPath(exeName: string): boolean {
 }
 
 export function activate(context: vscode.ExtensionContext) {
-  var serverPath = process.env.JBEAM_LSP_PATH || 'jbeam-lsp-server';
+  let serverPath = process.env.JBEAM_LSP_PATH || 'jbeam-lsp-server';
   console.log('[jbeam] activate: serverPath =', serverPath);
 
   if (!isExeInPath(serverPath) && platform() === 'win32') {
