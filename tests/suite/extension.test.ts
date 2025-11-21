@@ -1,7 +1,7 @@
 import * as path from "path";
 import * as vscode from "vscode";
 import {
-  expect
+  expect,
 } from "chai";
 
 const workspacePath = path.resolve(__dirname, "../../../external/jbeam-edit/examples/jbeam");
@@ -12,7 +12,7 @@ suite("JBeam LSP integration test", function() {
 
   test("Formats document via LSP", async () => {
     const ext = vscode.extensions.getExtension("webdevred.jbeam-lsp");
-    if (!ext) throw new Error("Extension not found");
+    if (!ext) {throw new Error("Extension not found");}
     await ext.activate();
 
     await new Promise(r => setTimeout(r, 1500));

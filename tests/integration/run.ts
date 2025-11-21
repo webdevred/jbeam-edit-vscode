@@ -1,6 +1,6 @@
 import * as path from "path";
 import {
-  runTests
+  runTests,
 } from "@vscode/test-electron";
 
 async function main() {
@@ -12,7 +12,7 @@ async function main() {
     await runTests({
       extensionDevelopmentPath,
       extensionTestsPath,
-      launchArgs: ["--disable-extensions"]
+      launchArgs: ["--disable-extensions"],
     });
 
     console.log("Integration tests completed successfully!");
