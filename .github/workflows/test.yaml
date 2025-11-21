@@ -6,7 +6,22 @@ on:
   pull_request:
 
 jobs:
+  get-jbeam-edit-versions:
+    name: Get jbeam-edit versions
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Fetch jbeam-edit versions
+        id: set-matrix
+        run: bash ./scripts/get-releases.sh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   integration-test:
+    needs: [get-jbeam-edit-versions]
+    strategy:
+      matrix:  ${{ fromJSON(needs.get-jbeam-edit-versions.outputs.matrix) }}
     runs-on: windows-latest
     steps:
       - name: Checkout repository with submodules
@@ -29,9 +44,19 @@ jobs:
         run: |
           npm run format
           git diff --exit-code
+      - name: Checking out jbeam-edit with compatible version
+        run: |
+            echo "Checking out jbeam-edit $version"
+            cd external/jbeam-edit
+            git fetch --tags
+            git checkout $version
+        env:
+          version: ${{ matrix.jbeam_lsp_server }}
+        shell: bash
       - name: Install and start jbeam-lsp-server
         run: powershell -ExecutionPolicy Bypass -File ./scripts/setup_jbeam_server.ps1
         env:
+          VERSION: ${{ matrix.jbeam_lsp_server }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build project
         run: npm run build
