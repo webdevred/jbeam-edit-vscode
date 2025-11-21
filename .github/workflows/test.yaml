@@ -2,14 +2,17 @@ name: Test Jbeam Edit extension
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
 
 jobs:
   integration-test:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v5
+      - name: Checkout repository with submodules
+        uses: actions/checkout@v5
+        with:
+          submodules: true
       - name: Cache node modules
         uses: actions/cache@v4.3.0
         with:
@@ -19,10 +22,21 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - run: npm clean-install
+      - name: Install Node.js dependencies
+        run: npm clean-install
       - name: Check formatting with js-beautify
         shell: bash
         run: |
           npm run format
           git diff --exit-code
-      - run: npm run build
+      - name: Install and start jbeam-lsp-server
+        run: powershell -ExecutionPolicy Bypass -File ./scripts/setup_jbeam_server.ps1
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build project
+        run: npm run build
+      - name: Convert line endings for example JBeam file
+        shell: bash
+        run: find external/jbeam-edit/examples/formatted_jbeam -type f -exec sed -i 's/$/\r/' {} +
+      - name: Run tests
+        run: npm run test

@@ -1,0 +1,3 @@
+[submodule "external/jbeam-edit"]
+	path = external/jbeam-edit
+	url = https://github.com/webdevred/jbeam_edit.git
