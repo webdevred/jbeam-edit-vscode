@@ -1,14 +1,14 @@
 import * as vscode from 'vscode';
 import {
-  platform
+  platform,
 } from 'os';
 import {
-  execSync
+  execSync,
 } from 'child_process';
 import {
   LanguageClient,
   LanguageClientOptions,
-  ServerOptions
+  ServerOptions,
 } from 'vscode-languageclient/node';
 
 let client: LanguageClient;
@@ -36,7 +36,7 @@ function isExeInPath(exeName: string): boolean {
   const cmd = platform() === 'win32' ? `where ${exeName}` : `which ${exeName}`;
   try {
     const result = execSync(cmd, {
-      stdio: 'pipe'
+      stdio: 'pipe',
     }).toString().trim();
     return result.length > 0;
   } catch {
@@ -56,19 +56,19 @@ export function activate(context: vscode.ExtensionContext) {
   const serverOptions: ServerOptions = {
     run: {
       command: serverPath,
-      args: []
+      args: [],
     },
     debug: {
       command: serverPath,
-      args: []
-    }
+      args: [],
+    },
   };
 
   const clientOptions: LanguageClientOptions = {
     documentSelector: [{
       scheme: 'file',
-      language: 'jbeam'
-    }]
+      language: 'jbeam',
+    }],
   };
 
   client = new LanguageClient('jbeamLsp', 'JBeam Language Server', serverOptions, clientOptions);
@@ -117,12 +117,12 @@ export function activate(context: vscode.ExtensionContext) {
       try {
         const edits = await client.sendRequest < LSPTextEdit[] > ('textDocument/formatting', {
           textDocument: {
-            uri: document.uri.toString()
+            uri: document.uri.toString(),
           },
           options: {
             tabSize: editor.options.tabSize || 2,
-            insertSpaces: true
-          }
+            insertSpaces: true,
+          },
         });
 
         if (edits && edits.length > 0) {
@@ -132,9 +132,9 @@ export function activate(context: vscode.ExtensionContext) {
               document.uri,
               new vscode.Range(
                 new vscode.Position(edit.range.start.line, edit.range.start.character),
-                new vscode.Position(edit.range.end.line, edit.range.end.character)
+                new vscode.Position(edit.range.end.line, edit.range.end.character),
               ),
-              edit.newText
+              edit.newText,
             );
           }
           const applied = await vscode.workspace.applyEdit(workspaceEdit);
@@ -156,7 +156,7 @@ export function activate(context: vscode.ExtensionContext) {
     dispose: () => {
       console.log('[jbeam] disposing language client');
       return client ? client.stop() : undefined;
-    }
+    },
   });
 }
 

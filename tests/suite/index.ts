@@ -4,7 +4,7 @@ import Mocha from "mocha";
 export function run(): Promise < void > {
   const mocha = new Mocha({
     ui: "tdd",
-    color: true
+    color: true,
   });
 
   const testFile = path.resolve(__dirname, "./extension.test.js");
