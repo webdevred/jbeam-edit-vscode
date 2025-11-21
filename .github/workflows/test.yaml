@@ -9,7 +9,8 @@ jobs:
   integration-test:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v5
+      - name: Checkout repository with submodules
+        uses: actions/checkout@v5
         with:
           submodules: true
       - name: Cache node modules
@@ -21,7 +22,8 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - run: npm clean-install
+      - name: Install Node.js dependencies
+        run: npm clean-install
       - name: Check formatting with js-beautify
         shell: bash
         run: |
@@ -31,6 +33,9 @@ jobs:
         run: powershell -ExecutionPolicy Bypass -File ./scripts/setup_jbeam_server.ps1
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: npm run build
-      - run: perl -pi -e 's/\n/\r\n/' external/jbeam-edit/examples/formatted_jbeam/fender-minimal-jbfl.jbeam
-      - run: npm run test
+      - name: Build project
+        run: npm run build
+      - name: Convert line endings for example JBeam file
+        run: perl -pi -e 's/\n/\r\n/' external/jbeam-edit/examples/formatted_jbeam/fender-minimal-jbfl.jbeam
+      - name: Run tests
+        run: npm run test
