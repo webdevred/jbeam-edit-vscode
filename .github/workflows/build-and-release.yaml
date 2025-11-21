@@ -1,0 +1,30 @@
+name: Release Jbeam Edit extension
+
+on:
+  push:
+    tags: [v*]
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Cache node modules
+        uses: actions/cache@v4.3.0
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - run: npm clean-install
+      - name: Check formatting with js-beautify
+        run: |
+          npm run format
+          git diff --exit-code
+      - run: npm run build
+      - name: Package extension
+        run: npm run package
+      - name: Publish to Visual Studio Marketplace
+        run: npx vsce publish -p ${{ secrets.VSCE_TOKEN }}
