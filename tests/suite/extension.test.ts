@@ -22,7 +22,6 @@ suite("JBeam LSP integration test", function() {
 
     const before = document.getText();
 
-    // Kör format-kommandot
     await vscode.commands.executeCommand("jbeam.formatDocument");
 
     await new Promise(r => setTimeout(r, 800));
@@ -32,7 +31,6 @@ suite("JBeam LSP integration test", function() {
     expect(after.length).to.be.greaterThan(0);
     expect(after).to.not.equal(before);
 
-    // Optional: jämför med redan formaterad fil
     const formattedPath = path.resolve(__dirname, "../../../external/jbeam-edit/examples/formatted_jbeam/fender-minimal-jbfl.jbeam");
     const formattedDoc = await vscode.workspace.openTextDocument(formattedPath);
     expect(after).to.equal(formattedDoc.getText());

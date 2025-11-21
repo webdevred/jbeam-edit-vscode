@@ -36,6 +36,7 @@ jobs:
       - name: Build project
         run: npm run build
       - name: Convert line endings for example JBeam file
-        run: perl -pi -e 's/\n/\r\n/' external/jbeam-edit/examples/formatted_jbeam/fender-minimal-jbfl.jbeam
+        shell: bash
+        run: find external/jbeam-edit/examples/formatted_jbeam -type f -exec sed -i 's/$/\r/' {} +
       - name: Run tests
         run: npm run test

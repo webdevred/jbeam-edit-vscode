@@ -25,6 +25,7 @@ Start-Process -FilePath $setupExe -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /
 Write-Host "Installation complete."
 
 $serverExe = "C:\Program Files (x86)\jbeam-edit\jbeam-lsp-server.exe"
+
 if (!(Test-Path $serverExe)) {
     Write-Host "ERROR: jbeam-lsp-server.exe not found."
     exit 1

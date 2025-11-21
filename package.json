@@ -74,7 +74,6 @@
     "mocha": "^11.7.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3",
-    "@vscode/vsce": "^2.15.0",
     "@types/vscode": "^1.106.1",
     "@vscode/vsce": "^3.7.0",
     "esbuild": "^0.27.0"
@@ -84,7 +83,7 @@
     "build": "npm run typecheck && esbuild src/extension.ts --bundle --platform=node --external:vscode --outfile=dist/src/extension.js",
     "format": "js-beautify -r './**/*.ts'",
     "package": "vsce package",
-    "test": "npm run build && node ./dist/tests/integration/run.js"
+    "test": "npm run build && tsc -p . && node ./dist/tests/integration/run.js"
   },
   "files": [
     "dist/src",

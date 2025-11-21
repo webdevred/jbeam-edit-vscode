@@ -1,5 +1,11 @@
 import * as vscode from 'vscode';
 import {
+  platform
+} from 'os';
+import {
+  execSync
+} from 'child_process';
+import {
   LanguageClient,
   LanguageClientOptions,
   ServerOptions
@@ -26,9 +32,26 @@ function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function isExeInPath(exeName: string): boolean {
+  const cmd = platform() === 'win32' ? `where ${exeName}` : `which ${exeName}`;
+  try {
+    const result = execSync(cmd, {
+      stdio: 'pipe'
+    }).toString().trim();
+    return result.length > 0;
+  } catch {
+    return false;
+  }
+}
+
 export function activate(context: vscode.ExtensionContext) {
-  const serverPath = process.env.JBEAM_LSP_PATH || 'jbeam-lsp-server';
+  var serverPath = process.env.JBEAM_LSP_PATH || 'jbeam-lsp-server';
   console.log('[jbeam] activate: serverPath =', serverPath);
+
+  if (!isExeInPath(serverPath) && platform() === 'win32') {
+    console.log(`[jbeam] could not find ${serverPath}, checking inside Program Files (x86)`);
+    serverPath = "C:\\Program Files (x86)\\jbeam-edit\\jbeam-lsp-server.exe";
+  }
 
   const serverOptions: ServerOptions = {
     run: {
@@ -103,7 +126,6 @@ export function activate(context: vscode.ExtensionContext) {
         });
 
         if (edits && edits.length > 0) {
-          console.log('[jbeam] received edits:', edits);
           const workspaceEdit = new vscode.WorkspaceEdit();
           for (const edit of edits) {
             workspaceEdit.replace(

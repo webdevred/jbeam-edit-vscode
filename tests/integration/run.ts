@@ -5,10 +5,8 @@ import {
 
 async function main() {
   try {
-    // Projektroten med package.json
     const extensionDevelopmentPath = path.resolve(__dirname, "../../../");
 
-    // Kompilerad test-suite
     const extensionTestsPath = path.resolve(__dirname, "../suite");
 
     await runTests({
