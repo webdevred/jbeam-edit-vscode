@@ -3,12 +3,15 @@
     "module": "commonjs",
     "target": "es2020",
     "outDir": "dist",
-    "rootDir": "src",
+    "rootDir": ".",
     "strict": true,
     "moduleResolution": "node",
     "lib": ["es2020"],
-    "types": ["node", "vscode"],
-    "skipLibCheck": true,
+    "types": ["node", "vscode", "mocha"],
+    "skipLibCheck": true
   },
-  "include": ["src"]
+  "include": [
+    "src",
+    "tests"
+  ]
 }

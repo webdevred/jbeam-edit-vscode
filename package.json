@@ -2,30 +2,36 @@
   "name": "jbeam-lsp",
   "displayName": "JBeam LSP Connector",
   "description": "Minimal VS Codium extension that connects to jbeam-lsp-server for LSP features.",
-  "version": "0.0.3",
+  "version": "0.0.7",
   "publisher": "webdevred",
+  "repository": "https://github.com/webdevred/jbeam-edit-vscode",
   "engines": {
-    "vscode": "^1.95.0"
+    "vscode": "^1.106.0"
   },
   "activationEvents": [
     "onLanguage:jbeam",
     "onLanguage:jbfl"
   ],
-  "main": "./dist/extension.js",
+  "main": "./dist/src/extension.js",
   "categories": [
     "Programming Languages"
   ],
   "contributes": {
-    "commands": [{
-      "command": "jbeam.formatDocument",
-      "title": "Format JBeam Document"
-    }],
-    "keybindings": [{
-      "command": "jbeam.formatDocument",
-      "key": "ctrl+alt+f",
-      "when": "editorLangId == jbeam"
-    }],
-    "languages": [{
+    "commands": [
+      {
+        "command": "jbeam.formatDocument",
+        "title": "Format JBeam Document"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "jbeam.formatDocument",
+        "key": "ctrl+alt+f",
+        "when": "editorLangId == jbeam"
+      }
+    ],
+    "languages": [
+      {
         "id": "jbeam",
         "aliases": [
           "JBeam",
@@ -47,23 +53,43 @@
         "configuration": "./src/language-jbfl-config.json"
       }
     ],
-    "grammars": [{
-      "language": "jbfl",
-      "scopeName": "source.jbfl",
-      "path": "./src/jbfl.tmLanguage.json"
-    }]
+    "grammars": [
+      {
+        "language": "jbfl",
+        "scopeName": "source.jbfl",
+        "path": "./src/jbfl.tmLanguage.json"
+      }
+    ]
   },
   "dependencies": {
     "vscode-languageclient": "^9.0.1"
   },
   "devDependencies": {
+    "@types/chai": "^5.2.3",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^24.8.1",
-    "@types/vscode": "^1.95.0",
+    "@vscode/test-electron": "^2.5.2",
+    "chai": "^6.2.0",
+    "js-beautify": "^1.15.4",
+    "mocha": "^11.7.4",
+    "ts-node": "^10.9.2",
     "typescript": "^5.6.3",
-    "js-beautify": "^1.15.4"
+    "vsce": "^2.15.0",
+    "@types/vscode": "^1.106.1",
+    "@vscode/vsce": "^3.7.0",
+    "esbuild": "^0.27.0"
   },
   "scripts": {
-    "build": "tsc -p .",
-    "format": "js-beautify -r '**/*.ts' 'package.json'"
-  }
+    "typecheck": "tsc --noEmit",
+    "build": "npm run typecheck && esbuild src/extension.ts --bundle --platform=node --external:vscode --outfile=dist/src/extension.js",
+    "format": "js-beautify -r './**/*.ts'",
+    "package": "vsce package",
+    "test": "npm run build && node ./dist/tests/integration/run.js"
+  },
+  "files": [
+    "dist/src",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ]
 }
