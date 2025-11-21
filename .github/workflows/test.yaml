@@ -25,6 +25,10 @@ jobs:
         run: |
           npm run format
           git diff --exit-code
+      - name: Install and start jbeam-lsp-server
+        run: powershell -ExecutionPolicy Bypass -File ./scripts/setup_jbeam_server.ps1
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: npm run build
       - run: perl -pi -e 's/\n/\r\n/' external/jbeam-edit/examples/formatted_jbeam/fender-minimal-jbfl.jbeam
       - run: npm run test
