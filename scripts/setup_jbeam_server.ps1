@@ -5,11 +5,19 @@ $zipDir = "C:\jbeam-lsp-server"
 New-Item -ItemType Directory -Force -Path $zipDir | Out-Null
 Write-Host "Directory created."
 
-Write-Host "Downloading release v0.0.4 from GitHub..."
-gh release download v0.0.4 --repo webdevred/jbeam_edit --pattern "jbeam-edit-v0.0.4-experimental.zip" --dir $zipDir
+$version = if ($env:VERSION) { 
+    $env:VERSION 
+} else { 
+    "v0.0.4" 
+}
+
+$archiveName="jbeam-edit-$version-experimental.zip"
+
+Write-Host "Downloading release $version from GitHub..."
+gh release download $version --repo webdevred/jbeam_edit --pattern $archiveName --dir $zipDir
 Write-Host "Download complete."
 
-$zipPath = Join-Path $zipDir "jbeam-edit-v0.0.4-experimental.zip"
+$zipPath = Join-Path $zipDir $archiveName
 Write-Host "Extracting $zipPath..."
 Expand-Archive $zipPath -DestinationPath $zipDir -Force
 Write-Host "Extraction complete."
