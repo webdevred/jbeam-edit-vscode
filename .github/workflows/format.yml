@@ -1,0 +1,29 @@
+name: Formatting
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  integration-test:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository with submodules
+        uses: actions/checkout@v6
+      - name: Cache node modules
+        uses: actions/cache@v4.3.0
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install Node.js dependencies
+        run: npm clean-install
+      - name: Check formatting with js-beautify
+        shell: bash
+        run: |
+          npm run format
+          git diff --exit-code
