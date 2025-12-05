@@ -13,9 +13,6 @@ updates:
       - dependency-type: "direct"
     ignore:
       - dependency-name: "@types/vscode"
-    groups:
-      all-dependabot-updates:
-        patterns: ['*']
   - package-ecosystem: github-actions
     directory: /
     schedule:
@@ -24,6 +21,3 @@ updates:
     commit-message:
       prefix: chore
       include: scope
-    groups:
-      all-dependabot-updates:
-        patterns: ['*']
