@@ -31,10 +31,4 @@ jobs:
         run: npm clean-install
       - name: Check for outdated dependencies
         shell: bash
-        run: |-
-          OUTDATED=$(npm outdated || true)
-          if [ -n "$OUTDATED" ]; then
-            echo "Outdated dependencies found:"
-            echo "$OUTDATED"
-            exit 1
-          fi
+        run: bash ./scripts/check_dependencies.sh
