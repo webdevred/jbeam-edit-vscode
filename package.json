@@ -83,7 +83,7 @@
   },
   "scripts": {
     "lint": "tsc --noEmit && eslint src tests",
-    "build": "npm run lint && esbuild src/extension.ts --bundle --platform=node --external:vscode --minify --outfile=dist/src/extension.js",
+    "build": "npm run lint && esbuild src/extension.ts --bundle --platform=node --external:vscode --external:vscode-languageclient/node --minify --outfile=dist/src/extension.js",
     "format": "js-beautify -r './**/*.ts'",
     "package": "vsce package",
     "test": "npm run build && tsc -p . && node ./dist/tests/integration/run.js"
