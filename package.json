@@ -62,7 +62,7 @@
     ]
   },
   "dependencies": {
-    "vscode-languageclient": "^9.0.1"
+    "vscode-languageclient": ">=9.0.1"
   },
   "devDependencies": {
     "@types/chai": ">=5.2.3",
