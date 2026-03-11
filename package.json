@@ -65,6 +65,7 @@
     "vscode-languageclient": ">=9.0.1"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/chai": ">=5.2.3",
     "@types/mocha": ">=10.0.10",
     "@types/node": ">=25.4.0",
@@ -75,9 +76,9 @@
     "@vscode/vsce": ">=3.7.1",
     "chai": ">=6.2.2",
     "esbuild": ">=0.27.3",
-    "eslint": ">=9.39.2",
+    "eslint": ">=10.0.3",
     "js-beautify": ">=1.15.4",
-    "mocha": ">=11.7.4",
+    "mocha": "^11.3.0",
     "ts-node": ">=10.9.2",
     "typescript": ">=5.6.3"
   },
@@ -94,5 +95,5 @@
     "README.md",
     "LICENSE"
   ],
-  "requiredJbeamEditVersion" :  "0.0.4"
+  "requiredJbeamEditVersion": "0.0.4"
 }
