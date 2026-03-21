@@ -9,10 +9,20 @@ updates:
     commit-message:
       prefix: chore
       include: scope
+    versioning-strategy: increase
     allow:
-      - dependency-type: "direct"
+      - dependency-type: all
     ignore:
-      - dependency-name: "@types/vscode"
+      - dependency-name: '@types/vscode'
+      - dependency-name: vscode-languageclient
+      - dependency-name: '@vscode/test-electron'
+    groups:
+      minor-and-patch:
+        patterns: ['*']
+        update-types: [minor, patch]
+      major:
+        patterns: ['*']
+        update-types: [major]
   - package-ecosystem: github-actions
     directory: /
     schedule:
@@ -21,3 +31,10 @@ updates:
     commit-message:
       prefix: chore
       include: scope
+    groups:
+      minor-and-patch:
+        patterns: ['*']
+        update-types: [minor, patch]
+      major:
+        patterns: ['*']
+        update-types: [major]
