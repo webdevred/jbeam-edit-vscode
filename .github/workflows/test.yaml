@@ -15,7 +15,8 @@ jobs:
       - uses: actions/checkout@v6
       - name: Fetch jbeam-edit versions
         id: set-matrix
-        run: bash ./scripts/get-releases.sh
+        shell: pwsh
+        run: ./scripts/Get-Releases.ps1
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   integration-test:
@@ -69,3 +70,5 @@ jobs:
         run: find external/jbeam-edit/examples/formatted_jbeam -type f -exec sed -i 's/$/\r/' {} +
       - name: Run tests
         run: npm run test
+        env:
+          VSCODE_VERSION: ${{ matrix.vscode_version }}
