@@ -1,6 +1,8 @@
 $ErrorActionPreference = "Stop"
 
-$minVersion = (Get-Content package.json | ConvertFrom-Json).requiredJbeamEditVersion
+$packageJson = Get-Content package.json | ConvertFrom-Json
+$minVersion = $packageJson.requiredJbeamEditVersion
+$minVscodeVersion = $packageJson.engines.vscode -replace '^[^\d]+', ''
 
 $releases = gh release list --repo webdevred/jbeam_edit |
     ForEach-Object { ($_ -split '\s+')[0] -replace '^v', '' } |
@@ -16,7 +18,7 @@ if ($selectedRelease) {
     $jbeamVersions += "v$selectedRelease"
 }
 
-$vscodeVersions = @("1.82.0", "stable")
+$vscodeVersions = @($minVscodeVersion, "stable")
 
 $matrix = @()
 foreach ($jbeam in $jbeamVersions) {
