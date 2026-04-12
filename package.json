@@ -6,7 +6,7 @@
   "publisher": "webdevred",
   "repository": "https://github.com/webdevred/jbeam-edit-vscode",
   "engines": {
-    "vscode": "^1.105.0"
+    "vscode": "^1.82.0"
   },
   "activationEvents": [
     "onLanguage:jbeam",
@@ -69,7 +69,7 @@
     "@types/chai": ">=5.2.3",
     "@types/mocha": ">=10.0.10",
     "@types/node": ">=25.5.2",
-    "@types/vscode": "^1.105",
+    "@types/vscode": "^1.82.0",
     "@typescript-eslint/eslint-plugin": ">=8.58.0",
     "@typescript-eslint/parser": ">=8.57.0",
     "@vscode/test-electron": ">=2.5.2",
