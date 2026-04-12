@@ -15,7 +15,8 @@ jobs:
       - uses: actions/checkout@v6
       - name: Fetch jbeam-edit versions
         id: set-matrix
-        run: bash ./scripts/get-releases.sh
+        shell: pwsh
+        run: ./scripts/Get-Releases.ps1
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   integration-test:
