@@ -16,6 +16,10 @@ updates:
       - dependency-name: '@types/vscode'
       - dependency-name: vscode-languageclient
       - dependency-name: '@vscode/test-electron'
+      - dependency-name: chai
+        versions: ['>=5']
+      - dependency-name: '@types/chai'
+        versions: ['>=5']
     groups:
       minor-and-patch:
         patterns: ['*']
