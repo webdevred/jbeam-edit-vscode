@@ -22,5 +22,5 @@ cross_product=$(jq -n --argjson jbeam "$js_array" --argjson vscode "$vscode_vers
 echo "$cross_product" | jq .
 
 if [[ "$GITHUB_OUTPUT" != "" ]]; then
-  printf 'matrix={"include" : %s}\n' "${cross_product}" >> "$GITHUB_OUTPUT"
+  printf 'matrix={"include" : %s}\n' "$(echo "$cross_product" | jq -c .)" >> "$GITHUB_OUTPUT"
 fi
