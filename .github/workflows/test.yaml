@@ -5,6 +5,9 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   get-jbeam-edit-versions:
     name: Get jbeam-edit versions
