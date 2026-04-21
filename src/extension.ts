@@ -11,7 +11,7 @@ import {
   ServerOptions,
 } from 'vscode-languageclient/node';
 
-let client: LanguageClient;
+let client: LanguageClient | undefined;
 
 interface LSPPosition {
   line: number;
@@ -114,8 +114,9 @@ export async function activate(context: vscode.ExtensionContext) {
         console.log('[jbeam] no edits returned from server');
       }
     } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
       console.error('[jbeam] JBeam format failed:', err);
-      vscode.window.showErrorMessage('JBeam format failed: ' + err);
+      vscode.window.showErrorMessage('JBeam format failed: ' + msg);
     }
   });
 
@@ -127,7 +128,9 @@ export async function activate(context: vscode.ExtensionContext) {
     await client.start();
     console.log('[jbeam] client started');
   } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
     console.error('[jbeam] client.start() failed:', err);
+    vscode.window.showErrorMessage('JBeam LSP server failed to start: ' + msg);
   }
 }
 

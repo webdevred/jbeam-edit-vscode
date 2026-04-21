@@ -20,10 +20,10 @@ if ($selectedRelease) {
 
 $vscodeVersions = @($minVscodeVersion, "stable")
 
-$matrix = @()
+$matrix = [System.Collections.Generic.List[object]]::new()
 foreach ($jbeam in $jbeamVersions) {
     foreach ($vscode in $vscodeVersions) {
-        $matrix += @{ jbeam_lsp_server = $jbeam; vscode_version = $vscode }
+        $matrix.Add(@{ jbeam_lsp_server = $jbeam; vscode_version = $vscode })
     }
 }
 

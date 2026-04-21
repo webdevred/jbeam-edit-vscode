@@ -5,8 +5,11 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
-  integration-test:
+  check-formatting:
     runs-on: windows-latest
     steps:
       - name: Checkout repository with submodules

@@ -1,7 +1,7 @@
 $ErrorActionPreference = "Stop"
 
-Write-Host "Creating directory $zipDir..."
 $zipDir = "C:\jbeam-lsp-server"
+Write-Host "Creating directory $zipDir..."
 New-Item -ItemType Directory -Force -Path $zipDir | Out-Null
 Write-Host "Directory created."
 
