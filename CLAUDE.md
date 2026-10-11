@@ -2,9 +2,14 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Important notes for Claude
+## Running the test locally
 
-**Do not run `npm run test` in your environment.** Tests require a real VS Code instance, a running `jbeam-lsp-server` binary, and the `external/jbeam-edit` git submodule — none of which are available here. Ask the user to run tests locally instead.
+```bash
+git submodule update --init
+scripts/test-local.sh <path to a jbeam-lsp-server binary>
+```
+
+The script sets `JBEAM_LSP_PATH` to the binary and runs `npm run test`. With `xvfb-run` installed the script runs VS Code on a virtual display, and without it a VS Code window opens while the test runs. The first run downloads VS Code into `.vscode-test/`. The expected output comes from `external/jbeam-edit`, so check that submodule out at the core commit the server was built from. Do not run it without a server binary to point at: ask for the path instead.
 
 ## Commands
 
@@ -12,7 +17,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 npm run lint        # TypeScript type-check + ESLint
 npm run build       # lint + bundle with esbuild → dist/src/extension.js
 npm run format      # format all .ts files in-place recursively with js-beautify
-npm run test        # build + tsc -p . (compiles tests) + run integration tests via @vscode/test-electron
+npm run test        # build + tsc -p . (compiles the host script) + vitest, which starts VS Code via @vscode/test-electron
 npm run package     # vsce package → .vsix
 ```
 
@@ -44,18 +49,18 @@ This is a minimal VS Code/Codium extension that acts as an LSP client for the ex
 
 **Test setup:**
 
-- Integration tests run inside a real VS Code instance via `@vscode/test-electron`
-- `tests/integration/run.ts` — launches VS Code with the extension under test
-- `tests/suite/index.ts` — Mocha TDD runner entry point
-- `tests/suite/extension.test.ts` — single test: opens `external/jbeam-edit/examples/jbeam/fender.jbeam`, executes `jbeam.formatDocument`, and compares output against `external/jbeam-edit/examples/formatted_jbeam/fender-minimal-jbfl.jbeam`
-- Tests require a running `jbeam-lsp-server` and the `external/jbeam-edit` git submodule to be checked out
+- The test runner is vitest, but vitest cannot run inside VS Code and the `vscode` module exists nowhere else, so the test is split in two
+- `tests/format.test.ts` — the vitest test, run outside VS Code: starts VS Code with the extension through `@vscode/test-electron`, then compares the file the host script wrote against `external/jbeam-edit/examples/formatted_jbeam/fender-minimal-jbfl.jbeam`, converted to the line endings of the input file
+- `tests/host/formatDocument.ts` — runs inside VS Code, has no assertions and must export `run`: opens the file named in `JBEAM_TEST_INPUT`, executes `jbeam.formatDocument`, and writes the document text to `JBEAM_TEST_OUTPUT`
+- `vitest run --dir tests` keeps vitest away from the compiled copy of the test under `dist/`
+- Tests require a `jbeam-lsp-server` binary and the `external/jbeam-edit` git submodule to be checked out
 
 **CI:**
 
 - `.github/workflows/format.yml` — runs on every push/PR; checks that `npm run format` produces no diff
 - `.github/workflows/test.yaml` — runs on every push/PR:
   1. `get-jbeam-edit-versions` job (Ubuntu): runs `scripts/Get-Releases.ps1` to build the test matrix
-  2. `integration-test` job (Windows, matrix): checks out submodules, installs deps, checks formatting, checks out the matching `external/jbeam-edit` tag, runs `scripts/setup_jbeam_server.ps1` to install the server, converts line endings in example files, then runs `npm run test`
+  2. `integration-test` job (Windows, matrix): checks out submodules, installs deps, checks formatting, checks out the matching `external/jbeam-edit` tag, runs `scripts/setup_jbeam_server.ps1` to install the server, then runs `npm run test`
 - `.github/workflows/build-and-release.yaml` — runs on every push/PR and tag pushes; builds and packages the extension; publishes to the VS Marketplace via `vsce publish` on tag pushes
 - `scripts/Get-Releases.ps1` — queries `webdevred/jbeam_edit` GitHub releases and builds a CI matrix JSON (jbeam versions cross VS Code versions); the matrix includes the minimum required version and the latest compatible release
 - `scripts/setup_jbeam_server.ps1` — downloads and silently installs the `jbeam-lsp-server` Windows release from `webdevred/jbeam_edit` GitHub releases; the install path is `C:\Program Files (x86)\jbeam-edit\jbeam-lsp-server.exe`

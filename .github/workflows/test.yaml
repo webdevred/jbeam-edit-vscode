@@ -68,9 +68,6 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build project
         run: npm run build
-      - name: Convert line endings for example JBeam file
-        shell: bash
-        run: find external/jbeam-edit/examples/formatted_jbeam -type f -exec sed -i 's/$/\r/' {} +
       - name: Run tests
         run: npm run test
         env:

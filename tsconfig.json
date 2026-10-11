@@ -9,7 +9,7 @@
     "ignoreDeprecations": "6.0",
     "esModuleInterop": true,
     "lib": ["es2020"],
-    "types": ["node", "vscode", "mocha"],
+    "types": ["node", "vscode"],
     "skipLibCheck": true
   },
   "include": [

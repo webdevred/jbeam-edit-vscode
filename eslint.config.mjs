@@ -32,16 +32,6 @@ export default defineConfig([
   },
 
   {
-    files: ["tests/**/*.ts", "tests/**/*.js"],
-    languageOptions: {
-      globals: {
-        suite: "readonly",
-        test: "readonly",
-      },
-    },
-  },
-
-  {
     ignores: ["node_modules/**", "dist/**"],
   },
 ]);
