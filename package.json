@@ -66,31 +66,25 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/chai": "^4.3.0",
-    "@types/mocha": ">=10.0.10",
     "@types/node": ">=25.9.3",
     "@types/vscode": "^1.82.0",
     "@typescript-eslint/eslint-plugin": ">=8.61.1",
     "@typescript-eslint/parser": ">=8.57.0",
     "@vscode/test-electron": ">=2.5.2",
     "@vscode/vsce": ">=3.9.2",
-    "chai": "^4.5.0",
     "esbuild": ">=0.28.1",
     "eslint": ">=10.5.0",
     "js-beautify": ">=1.15.4",
-    "mocha": "^11.7.6",
     "ts-node": ">=10.9.2",
-    "typescript": ">=6.0.3"
-  },
-  "overrides": {
-    "serialize-javascript": "^7.0.3"
+    "typescript": ">=6.0.3",
+    "vitest": "^5.0.3"
   },
   "scripts": {
     "lint": "tsc --noEmit && eslint src tests",
     "build": "npm run lint && esbuild src/extension.ts --bundle --platform=node --external:vscode --external:vscode-languageclient/node --minify --outfile=dist/src/extension.js",
     "format": "js-beautify -r './**/*.ts'",
     "package": "vsce package",
-    "test": "npm run build && tsc -p . && node ./dist/tests/integration/run.js"
+    "test": "npm run build && tsc -p . && vitest run --dir tests"
   },
   "files": [
     "dist/src",
